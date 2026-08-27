@@ -9,7 +9,9 @@ WITH fct_reviews AS (
     FROM {{ref('src_reviews')}}
 )
 
-Select *
+Select 
+{{dbt_utils.generate_surrogate_key(['listing_id', 'review_date', 'reviewer_name', 'review_text' ])}} AS review_id,
+ *
 From fct_reviews
 where review_text is not NULL
 

@@ -1,5 +1,11 @@
 models: 
   - name: dim_listing_cleansed
+    data_tests:
+      - minimum_row_count:
+          arguments:
+            min_row_count: 10000000
+          severity: warn
+
     columns: 
       - name: listing_id
         tests: 
@@ -21,22 +27,43 @@ models:
               arguments: 
                 values: ['Entire home/apt','Private room', 'Shared room', 'Hotel room']
       
+      - name: minimum_nights
+        data_tests:
+          - positive_values
+      
   - name: dim_hosts_cleansed
+    config:
+      contract:
+        enforced: true
+    
     columns: 
       - name: host_id
+        data_type: integer
+        constraints:
+          - type: not_null
         data_tests:
           - unique
           - not_null
 
       - name: host_name
+        data_type: string
+        constraints:
+          - type: not_null
         data_tests:
           - not_null
 
       - name: is_superhost
+        data_type: string
         data_tests:
           - accepted_values:
               arguments:
                 values: ['t', 'f']
+
+      - name: updated_at
+        data_type: timestamp
+
+      - name: created_at
+        data_type: timestamp
 
   - name: fct_reviews
     columns: 
@@ -57,5 +84,3 @@ models:
             - accepted_values:
                 arguments:
                   values: ['positive', 'negative', 'neutral']
-
-    

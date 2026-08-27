@@ -1,0 +1,6 @@
+{% test minimum_row_count(model, min_row_count) %}
+Select Count(*)
+From {{model}}
+HAVING COUNT(*) < {{min_row_count}}
+
+{%endtest%}
