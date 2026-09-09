@@ -1,5 +1,6 @@
 models: 
   - name: dim_listing_cleansed
+    description: Cleansed table which contains Airbnb Listings.
     data_tests:
       - minimum_row_count:
           arguments:
@@ -8,12 +9,16 @@ models:
 
     columns: 
       - name: listing_id
-        tests: 
+        description: Primary keys for the Listing table
+        data_tests: 
           - unique
           - not_null
 
+      - name: listing_name
+        description: Name of the listing
 
       - name: host_id
+        description: The host's id, References the host table
         data_tests: 
           - not_null
           - relationships:
@@ -22,22 +27,30 @@ models:
                 field: host_id
 
       - name: room_type
+        description: Type of apartment / room
         data_tests: 
           - accepted_values:
               arguments: 
                 values: ['Entire home/apt','Private room', 'Shared room', 'Hotel room']
-      
+
+      - name: price
+        description: Price of the listing
+
+
       - name: minimum_nights
+        description: '{{doc("dim_listing_cleansed_minimum_night")}}'
         data_tests:
           - positive_values
       
   - name: dim_hosts_cleansed
+    description: Cleansed table which contains Airbnb Hosts
     config:
       contract:
         enforced: true
     
     columns: 
       - name: host_id
+        description: Primary keys for the host table
         data_type: integer
         constraints:
           - type: not_null
@@ -46,6 +59,7 @@ models:
           - not_null
 
       - name: host_name
+        description: Name of the host
         data_type: string
         constraints:
           - type: not_null
@@ -53,6 +67,7 @@ models:
           - not_null
 
       - name: is_superhost
+        description: Whether the host is a superhost or not
         data_type: string
         data_tests:
           - accepted_values:
@@ -60,14 +75,18 @@ models:
                 values: ['t', 'f']
 
       - name: updated_at
+        description: Timestamp of when the host record was last updated
         data_type: timestamp
 
       - name: created_at
+        description: Timestamp of when the host record was created  
         data_type: timestamp
 
   - name: fct_reviews
+    description: Fact table which contains Airbnb Reviews
     columns: 
         - name: listing_id
+          description: Foreign key to the listing table
           data_tests:
             - not_null
             - relationships:
@@ -76,10 +95,12 @@ models:
                     field: listing_id
 
         - name: reviewer_name
+          description: Name of the reviewer
           data_tests:
             - not_null
 
         - name: review_sentiment
+          description: Sentiment of the review
           data_tests:
             - accepted_values:
                 arguments:
